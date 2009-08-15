@@ -56,7 +56,7 @@ int main( int argc, char* args[] ){
    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
 
    //if there was an error in setting up the screen
-   if( screen = NULL ){
+   if( screen == NULL ){
       return 1;
    }
 
@@ -68,9 +68,9 @@ int main( int argc, char* args[] ){
    background = load_image( "background.bmp" );
 
    //Apply thebackground to the screen
-   apply_surface( 0,0, background, screen );
+   apply_surface( 0, 0, background, screen );
    //Apply the other image to the screen
-   apply_surface( 180,140, message, screen );
+   apply_surface( 180, 140, message, screen );
 
    //Update the screen
    if( SDL_Flip( screen ) == -1){
