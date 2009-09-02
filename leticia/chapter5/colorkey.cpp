@@ -128,6 +128,9 @@ int main( int argc, char* args[] )
     //Quit flag
     bool quit = false;
 
+    //Initialize counter, doh!
+    int i = 0;
+
     //Initialize
     if( init() == false )
     {
@@ -142,13 +145,12 @@ int main( int argc, char* args[] )
 
     //Apply the surfaces to the screen
     apply_surface( 0, 0, background, screen );
-    apply_surface( 100, 100, foo, screen );
-    apply_surface( 200, 70, foo, screen );
-    apply_surface( 278, 208, foo, screen );
-    apply_surface( 129, 80, foo, screen );
-    apply_surface( 45, 213, foo, screen );
-    apply_surface( 90, 242, foo, screen );
-    apply_surface( 21, 20, foo, screen );
+    
+    while( i < 50 )
+    {
+        apply_surface( rand() % 450, rand() % 200, foo, screen );
+        i++;
+    }
 
     //Update the screen
     if( SDL_Flip( screen ) == -1 )
