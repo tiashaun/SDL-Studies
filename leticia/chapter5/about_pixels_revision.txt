@@ -1,0 +1,18 @@
+ * Uint32 stands for Unsigned integer 32 bits sized, thus a pixel's made
+ * by a set of numbers. Since it is just an array of 8 bit numbers, all we
+ * have to do to get the individual colors is type cast from one big 32 bit
+ * number to an array of 8 bit numbers. You should use SDL_GetRGB() for it.
+ *
+ * An Uint21 is consisted by 3 colors, 8 bit per each. The remaining 8 bits
+ * represents the alpha of the pixel - or the transparency -, where 255 is
+ * opaque and 0 means transparency.
+ *
+ * There is a lot of pixel formats, that's why we have to pass a
+ * SDL_PixelFormat to SDL_MapRGB() and SDL_GetRGB() so the functions know
+ * how to work with pixels.
+ *
+ * The different formats is also why you can't blit two surfaces of a different
+ * format together. If you copy ABGR pixels into a RGBA surface the colors are
+ * going to be all wrong. SDL can convert the pixels on the fly, but pixel
+ * conversion eats up CPU. This is why all surfaces are converted to the screen's
+ * format when we load them in our load_image() function.
