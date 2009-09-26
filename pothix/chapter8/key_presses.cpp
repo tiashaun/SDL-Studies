@@ -21,7 +21,7 @@ SDL_Event event;
 
 TTF_Font *font = NULL;
 
-SDL_Color textColor = {255, 255, 255 };
+SDL_Color textColor = {0, 0, 0 };
 
 bool init(){
    if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 ){
@@ -62,9 +62,13 @@ SDL_Surface *load_image( std::string filename ){
 
 bool load_files(){
    background = load_image( "background.png" );
-   font = TTF_OpenFont( "lazy.ttf", 28 );
+   font = TTF_OpenFont( "lazy.ttf", 60 );
 
    if( background == NULL ){
+      return false;
+   }
+
+   if( font == NULL ){
       return false;
    }
 
@@ -80,15 +84,14 @@ void clean_up(){
 
    TTF_CloseFont( font );
    TTF_Quit();
-   SDL_Quit;
+   SDL_Quit();
 }
 
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL ){
    SDL_Rect offset;
    offset.x = x;
    offset.y = y;
-   SDL_BlitSurface( source, NULL, destination, &offset );
-   offset.x = x;
+   SDL_BlitSurface( source, clip, destination, &offset );
 }
 
 int main (int argc, char* args[] ){
@@ -107,8 +110,11 @@ int main (int argc, char* args[] ){
    leftMessage = TTF_RenderText_Solid( font, "Left key was pressed", textColor );
    rightMessage = TTF_RenderText_Solid( font, "Right key was pressed", textColor );
 
+
+   apply_surface( 0, 0, background, screen );
+
    while( quit == false ){
-      while( SDL_PollEvent( &event )){
+      if( SDL_PollEvent( &event )){
 	 if( event.type == SDL_KEYDOWN ){
 	    switch( event.key.keysym.sym ){
 	       case SDLK_UP: message = upMessage; break;
@@ -121,17 +127,21 @@ int main (int argc, char* args[] ){
 	    quit = true;
 	 }
       }
+
+      if( message != NULL ){
+	 apply_surface( 0, 0, background, screen );
+	 apply_surface( ( SCREEN_WIDTH - message->w ) / 2, ( SCREEN_HEIGHT - message->h ) / 2, message, screen );
+
+	 message = NULL;
+      }
+
+
+      if( SDL_Flip( screen ) == -1 ){
+	 return 1;
+      }
    }
 
-   apply_surface( 0, 0, background, screen );
-   if( message != NULL ){
-      apply_surface( ( SCREEN_WIDTH - message->w ) / 2, ( SCREEN_HEIGHT - message->h ) / 2, message, screen );
-
-      message = NULL;
-   }
-
-   if( SDL_Flip( screen ) == -1 ){
-      return 1;
-   }
+   clean_up();
+   return 0;
 
 }
